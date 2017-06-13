@@ -6,14 +6,30 @@ import sys, os
 import collections
 import numpy as np
 import h5py
+import random
+from tqdm import tqdm
+
 #############################################################
-n_sampled_chars = 1000
+n_sampled_chars = 750
 temperature = 0.85
-starting_text = "war never changes "
-#starting_text = ". mankind "
+batch_size = 256//2
+
+#starting_text = "war never changes "
+starting_text = "i will have nothing more to do with you "
+
+#f1 = "single_models/shakespeare_input.h5"
+#f2 = "single_models/LoveCraft.h5"
+
+#f1 = "single_models/Delphi_Complete_Works_of_Ernest_Hemingway.h5"
+#f2 = "single_models/Alice_in_Wonderland.h5"
+
+#f1 = "single_models/The_Complete_Sherlock_Holmes,_Illustrated.h5"
+#f2 = "single_models/HarryPotter.h5"
 
 f1 = "single_models/warpeace_input.h5"
-f2 = "single_models/Delphi_Complete_Works_of_Ernest_Hemingway.h5"
+f2 = "single_models/LoveCraft.h5"
+
+
 #############################################################
 
 f_vectors = 'master_model/vectorized_sequences.h5'
@@ -35,6 +51,18 @@ def read_words(f_h5):
     tokens = set(tokens)
     return tokens
 
+def clean_text(text):
+    
+    if text[-1] == ' ':
+        tokens = text.split()
+        last_word = ''.join([x for x in tokens[-1] if x.isalpha()])
+        if last_word not in words:
+            text = ' '.join(tokens[:-1])
+        #else:
+        #    print text.strip()
+        
+    return text
+
 words = read_words(f1)
 words.update(read_words(f2))
 print "Found {} words".format(len(words))
@@ -48,39 +76,62 @@ M2 = keras.models.load_model(f2)
 TS = TextSampler(M1, maxlen, char_indices, indices_char)
 
 text = TS.format_text(starting_text)
+TEXT = [text,]*batch_size
 
 #for n in range(n_sampled_chars+1):
-for alpha in np.linspace(-0.25, 1.25, n_sampled_chars):
+ALPHA = np.linspace(-0.05, 1.15, n_sampled_chars)
 
-    x = TS.text_to_vec(TS.format_text(text))
+#for n in tqdm(range(n_sampled_chars)):
+progress_bar = tqdm(total=n_sampled_chars*1.2)
+while True:
 
+    progress_bar.update()
+    N = np.array([len(x.strip())/n_sampled_chars for x in TEXT])
     
-    if alpha < 0.5:
-        p = M1.predict(x)[0]
-        idx = TS.sample(p, temperature)
-        char = indices_char[idx]
-    else:
-        p = M2.predict(x)[0]
-        idx = TS.sample(p, temperature)
-        char = indices_char[idx]
+    if N.mean() >= 0.9:
+        break
     
-    '''
-    alpha = np.clip([alpha],0,1)[0]
-    p1 = M1.predict(x)[0]*(1-alpha)
-    p2 = M2.predict(x)[0]*(alpha)
-    p = p1+p2
-    p /= p.sum()
-    idx = TS.sample(p, temperature)
-    char = indices_char[idx]
-    '''
-    
+    X = np.array(map(TS.text_to_vec, map(TS.format_text, TEXT)))
+    X = X.reshape([batch_size, maxlen, len(char_indices)])
+    p1 = M1.predict(X)
+    p2 = M2.predict(X)
 
-    text += char
+    idx1 = np.array([TS.sample(x,temperature) for x in p1])
+    idx2 = np.array([TS.sample(x,temperature) for x in p2])
 
-    if char == ' ':
-        tokens = text.split()
-        last_word = ''.join([x for x in tokens[-1] if x.isalpha()])
-        if last_word not in words:
-            text = ' '.join(tokens[:-1])
+    char1 = np.array([indices_char[i] for i in idx1])
+    char2 = np.array([indices_char[i] for i in idx2])
+
+    prob = random.uniform(0,1)
+    for i in range(batch_size):
+        n = len(TEXT[i].strip())
+
+        # Full, don't add any more
+        if n>=len(ALPHA):
+            continue
+
+        print ALPHA[n]
+        
+        if prob > ALPHA[n]:
+            TEXT[i] += char1[i]
         else:
-            print text.strip()
+            TEXT[i] += char2[i]
+
+    TEXT = map(clean_text, TEXT)
+
+    print TEXT[0].strip()
+
+name1 = os.path.basename(f1).split('.')[0]
+name2 = os.path.basename(f2).split('.')[0]
+f_save = "sampled_text/{}_TO_{}.txt".format(name1,name2)
+
+os.system('mkdir -p sampled_text')
+with open(f_save,'w') as FOUT:
+
+    for text in TEXT:
+        if len(text)<int(n_sampled_chars*0.8):
+            continue
+        print text.strip()
+        FOUT.write(text.strip()+'\n')
+
+

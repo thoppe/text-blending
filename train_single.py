@@ -7,14 +7,14 @@ from build_training_set import load_all_text, build_single_dataset
 from build_training_set import load_info
 from sampler import TextSampler
 
-n_epochs = 5
+n_epochs = 4
 batch_size = 512
 
 TEXT = load_all_text('*')
 ordered_keys = sorted(TEXT, key=lambda k: len(TEXT[k]))
 
 f_h5 = 'master_model/vectorized_sequences.h5'
-f_master = 'master_model/model_006_1.4274.h5'
+f_master = 'master_model/model_005_1.3959.h5'
 f_vectors = 'master_model/vectorized_sequences.h5'
 maxlen, chars, char_indices, indices_char = load_info(f_vectors)
 
