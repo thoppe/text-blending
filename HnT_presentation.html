@@ -91,15 +91,35 @@
   </div>
   <h4>
    <text>
-    deep blending authors to make idiot soup
+    blending authors to make idiot soup with neural networks
    </text>
   </h4>
  </div>
+ <footer>
+  <div class="wrap">
+   <div class="span">
+    <a class="button alignleft ghost" href="https://github.com/thoppe/text-blending">
+     <text>
+      <i aria-hidden="true" class="fa fa-github">
+      </i>
+      Project repo
+     </text>
+    </a>
+    <a class="button ghost alignright" href="https://twitter.com/metasemantic">
+     <text>
+      <i aria-hidden="true" class="fa fa-twitter">
+      </i>
+      @metasemantic
+     </text>
+    </a>
+   </div>
+  </div>
+ </footer>
 </section><section class="bg-white slide" id="slide-number-2">
  <h3 class="size-80 wrap">
   <div class="alignleft">
    <text>
-    I like to build deep learning machines,
+    I like building deep learning architectures,
     <br/>
    </text>
   </div>
@@ -111,7 +131,7 @@
   </div>
   <div class="alignleft">
    <text>
-    and define a bot by what it's experienced.
+    and define a bot by what it has experienced.
    </text>
   </div>
  </h3>
@@ -131,17 +151,54 @@
   </div>
   <div class="alignright">
    <text>
-    we can use them (not to replace authors),
+    we can use them to create a new medium,
     <br/>
    </text>
   </div>
   <div class="alignleft">
    <text>
-    to create a new medium.
+    that remixes the past in a new way.
    </text>
   </div>
  </h3>
 </section><section class="bg-black slide" id="slide-number-3">
+ <div class="wrap">
+  <h1 class="text-data">
+   <text>
+    Building an author bot
+   </text>
+  </h1>
+  <h3>
+   <ul class="markdownlist">
+    <li>
+     <text>
+      Download a large corpus of text
+     </text>
+    </li>
+    <li>
+     <text>
+      Train a two-layer LSTM RNN over random sentences
+     </text>
+    </li>
+    <li>
+     <text>
+      Use Tensorflow (with Keras) to quickly prototype
+     </text>
+    </li>
+    <li>
+     <text>
+      Fix the top layer and train each author over the bottom layer
+     </text>
+    </li>
+   </ul>
+   <text>
+    <em>
+     now bots share a common vocabulary!
+    </em>
+   </text>
+  </h3>
+ </div>
+</section><section class="bg-black slide" id="slide-number-4">
  <span class="background" style="background-image:url('https://source.unsplash.com/MzIiekUr6m8')">
  </span>
  <div class="wrap">
@@ -173,7 +230,45 @@
    </div>
   </div>
  </div>
-</section><section class="size-70 slide" id="slide-number-4">
+</section><section class="bg-black slide" id="slide-number-5">
+ <div class="wrap">
+  <h1 class="text-data">
+   <text>
+    Blending bots
+   </text>
+  </h1>
+  <h3>
+   <ul class="markdownlist">
+    <li>
+     <text>
+      Sample a character from each bot
+     </text>
+    </li>
+    <li>
+     <text>
+      Choose which bot gets to speak with probability:
+     </text>
+    </li>
+    <li>
+     <text>
+      <div class="equation" data-expr="f_1=\alpha; f_2 = (1-\alpha)">
+      </div>
+     </text>
+    </li>
+    <li>
+     <text>
+      Restart word if it doesn't exist in author vocabulary
+     </text>
+    </li>
+    <li>
+     <text>
+      Parallel sample and choose best paragraph
+     </text>
+    </li>
+   </ul>
+  </h3>
+ </div>
+</section><section class="size-70 slide" id="slide-number-6">
  <h3 class="text-landing">
   <text>
    Shakespeare
@@ -214,7 +309,7 @@
    and nameless fills in five windows and the local experiment.
   </text>
  </div>
-</section><section class="size-70 slide" id="slide-number-5">
+</section><section class="size-70 slide" id="slide-number-7">
  <h3 class="text-landing">
   <text>
    Tolstoy to Joyce
@@ -248,6 +343,66 @@
   <text>
    Perished the candles and the fair waves had a gentle interest.
   </text>
+ </div>
+</section><section class="bg-black slide" id="slide-number-8">
+ <div class="wrap">
+  <h1 class="text-data">
+   <text>
+    Improvements?
+   </text>
+  </h1>
+  <h3>
+   <ul class="markdownlist">
+    <li>
+     <text>
+      Use word-based RNN
+     </text>
+    </li>
+    <li>
+     <text>
+      Enforce grammar as we do with words?
+     </text>
+    </li>
+    <li>
+     <text>
+      Use authors with
+      <em>
+       very
+      </em>
+      distinct style (Chuck Tingle?)
+     </text>
+    </li>
+    <li>
+     <text>
+      Meld human and bot authorship.
+     </text>
+    </li>
+   </ul>
+  </h3>
+ </div>
+</section><section class="bg-black slide-bottom slide" id="slide-number-9">
+ <span class="background" style="background-image:url('https://source.unsplash.com/refAFfV35Cw')">
+ </span>
+ <div class="wrap">
+  <h1 class="text-landing">
+   <text>
+    Thanks, you!
+   </text>
+  </h1>
+  <h3>
+   <text>
+    <a href="https://github.com/thoppe/text-blending">
+     https://github.com/thoppe/text-blending
+    </a>
+   </text>
+  </h3>
+  <h3>
+   <text>
+    <a href='https://twitter.com/metasemantic"'>
+     @metasemantic
+    </a>
+   </text>
+  </h3>
  </div>
 </section>
    </article>
